@@ -7,9 +7,12 @@ spring:
     username: task
     password: p@ssw0rd
     driver-class-name: org.postgresql.Driver
-
-
-jpa:
+  
+  jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
     show-sql: true
