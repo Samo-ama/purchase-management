@@ -19,8 +19,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer createCustomer(Customer customer) {
         // Validate customer data
-        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Customer name is required");
+        if (customer.getFirstName() == null || customer.getFirstName().trim().isEmpty()) {
+            throw new IllegalArgumentException("First name is required");
+        }
+        if (customer.getLastName() == null || customer.getLastName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Last name is required");
         }
         return customerRepository.save(customer);
     }
@@ -29,12 +32,16 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer updateCustomer(Long id, Customer customer) {
         try{
         // Validate customer data
-        if (customer.getName() == null || customer.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Customer name is required");
+        if (customer.getFirstName() == null || customer.getFirstName().trim().isEmpty()) {
+            throw new IllegalArgumentException("First name is required");
+        }
+        if (customer.getLastName() == null || customer.getLastName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Last name is required");
         }
         return customerRepository.findById(id)
                 .map(existingCustomer -> {
-                    existingCustomer.setName(customer.getName());
+                    existingCustomer.setFirstName(customer.getFirstName());
+                    existingCustomer.setLastName(customer.getLastName());
                     existingCustomer.setPhone(customer.getPhone());
                     return customerRepository.save(existingCustomer);
                 })

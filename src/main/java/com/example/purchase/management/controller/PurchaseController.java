@@ -33,7 +33,7 @@ public class PurchaseController {
 
     //Get all Purchase
     @GetMapping
-    public ResponseEntity<List<Purchase>> getAllProducts() {
+    public ResponseEntity<List<Purchase>> getAllPurchases() {
         return ResponseEntity.ok(purchaseService.getAllPurchases());
     }
 }

@@ -20,18 +20,22 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     @Override
     public Purchase createPurchase(Purchase purchase) {
-        // Validate customer exists
-        customerRepository.findById(purchase.getCustomer().getId())
+        // Validate and get complete customer
+        var customer = customerRepository.findById(purchase.getCustomer().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Customer not found"));
 
-        // Validate product exists
-        productRepository.findById(purchase.getProduct().getId())
+        // Validate and get complete product
+        var product = productRepository.findById(purchase.getProduct().getId())
                 .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
         // Validate amount
         if (purchase.getAmount() == null || purchase.getAmount() <= 0) {
             throw new IllegalArgumentException("Valid amount is required");
         }
+
+        // Set complete objects
+        purchase.setCustomer(customer);
+        purchase.setProduct(product);
 
         return purchaseRepository.save(purchase);
     }
