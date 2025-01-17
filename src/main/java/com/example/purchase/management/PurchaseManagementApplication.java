@@ -5,9 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 //import com.example.purchase.management.config.ReportProperties;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EntityScan("com.example.purchase.management.entity")
 @SpringBootApplication
+@EnableScheduling
 
 public class PurchaseManagementApplication {
 
