@@ -6,4 +6,5 @@ import java.util.List;
 public interface RefundService {
     Refund createRefund(Refund refund);
     List<Refund> getAllRefunds();
+    List<Refund> getYesterdayRefunds();
 }

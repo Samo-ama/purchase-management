@@ -8,5 +8,6 @@ public interface PurchaseService {
 
     Purchase createPurchase(Purchase purchase);
     List<Purchase> getAllPurchases();
+    List<Purchase> getYesterdayPurchases();
 
 }

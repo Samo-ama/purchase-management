@@ -1,5 +1,7 @@
 package com.example.purchase.management.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,5 +27,8 @@ public class Purchase {
     private Product product;
     
     private Double amount;
+
+    @Column(name = "created_date")
+    private LocalDateTime date = LocalDateTime.now();
 
 }

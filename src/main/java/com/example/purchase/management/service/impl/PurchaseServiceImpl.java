@@ -8,6 +8,9 @@ import com.example.purchase.management.service.PurchaseService;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -43,5 +46,12 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public List<Purchase> getAllPurchases() {
         return purchaseRepository.findAll();
+    }
+
+    @Override
+    public List<Purchase> getYesterdayPurchases() {
+        LocalDateTime start = LocalDate.now().minusDays(1).atStartOfDay();
+        LocalDateTime end = LocalDate.now().atStartOfDay();
+        return purchaseRepository.findAllByDateBetween(start, end);
     }
 }

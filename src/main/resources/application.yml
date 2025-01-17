@@ -2,27 +2,47 @@ server:
   port: 8080
 
 spring:
+  # Database Configuration
   datasource:
     url: jdbc:postgresql://localhost:5432/taskdb
     username: task
     password: p@ssw0rd
     driver-class-name: org.postgresql.Driver
 
+  # JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update    #create-drop
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format-sql: true
     show-sql: true
 
+  # Security Configuration
   security:
     user:
       name: test
       password: test
-        
 
+  # Email Configuration
+  
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: e5884142eab9e3   # Replace with your Gmail
+    password: 3d6e6181221576        # Replace with your app password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: false 
+
+# Logging Configuration
 logging:
   level:
     '[org.springframework.security]': DEBUG
+

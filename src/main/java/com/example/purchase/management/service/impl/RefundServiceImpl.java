@@ -1,5 +1,6 @@
 package com.example.purchase.management.service.impl;
 
+import com.example.purchase.management.entity.Purchase;
 import com.example.purchase.management.entity.Refund;
 import com.example.purchase.management.repository.RefundRepository;
 import com.example.purchase.management.repository.PurchaseRepository;
@@ -7,6 +8,9 @@ import com.example.purchase.management.service.RefundService;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -40,5 +44,12 @@ public class RefundServiceImpl implements RefundService {
     @Override
     public List<Refund> getAllRefunds() {
         return refundRepository.findAll();
+    }
+
+    @Override
+    public List<Refund> getYesterdayRefunds() {
+        LocalDateTime start = LocalDate.now().minusDays(1).atStartOfDay();
+        LocalDateTime end = LocalDate.now().atStartOfDay();
+        return refundRepository.findAllByDateBetween(start, end);
     }
 }
