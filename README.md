@@ -1,8 +1,9 @@
+
 # Purchase Management System
 
 A Spring Boot application for managing purchases and refunds with automated daily report generation and email notifications.
 
-## 🛠️ Technologies
+## 🚠 Technologies
 
 - Java 21.0.5
 - Spring Boot 3.2.0
@@ -11,7 +12,6 @@ A Spring Boot application for managing purchases and refunds with automated dail
 - Lombok
 - Spring Mail
 - HTML/CSS for reports
-
 
 ## 🚀 Quick Start Guide
 
@@ -52,7 +52,7 @@ spring:
   mail:
     host: smtp.elasticemail.com
     port: 2525
-    username: your-mail@gmail.com         # ElasticEmail Username 
+    username: your-mail@gmail.com         # ElasticEmail Username
     password: 2A5FF5C4131477E0A9B3DCBB4B223C0F0FB5    # Password key
     properties:
       mail:
@@ -61,10 +61,10 @@ spring:
           starttls:
             enable: true
     from: your-verified@elasticemail.com    # Must be verified in ElasticEmail
-    to: recipient@example.com  
-
+    to: recipient@example.com
 ```
- ### 2. Application Configuration
+
+### 4. Application Configuration
 Create `application.yml`:
 ```yaml
 server:
@@ -92,8 +92,8 @@ spring:
     user:
       name: test
       password: test
-    
-     #Email (ElasticEmail configuration)
+
+  # Email (ElasticEmail configuration)
   mail:
     host: smtp.elasticemail.com
     port: 2525
@@ -107,63 +107,49 @@ spring:
             enable: true
     from: your-verified@elasticemail.com
     to: recipient@example.com
-  
-```    
-### 3. Run Application
-```bash
-
-./mvnw spring-boot:run
-
-
 ```
-### 4. Verify Installation
+
+### 5. Run Application
+```bash
+./mvnw spring-boot:run
+```
+
+### 6. Verify Installation
 - Application runs on: `http://localhost:8080`
 - Database seeder will automatically populate sample data
 - Daily reports will be sent to configured email
 
-
-```
 ## 🔍 API Testing
 
 ### Using Postman
 1. Set Basic Auth:
    - Username: test
    - Password: test
-   ```
 
-
-
-```
 ## 🔍 Troubleshooting
-
 
 ### Common Issues
 
- **Email Not Sending**
-   ```
-   Solution: Verify ElasticEmail credentials and sender email is verified
-   ```
-
-
-
+**Email Not Sending**
+```plaintext
+Solution: Verify ElasticEmail credentials and sender email is verified
 ```
+
 ### Sample Data
 The seeder creates:
 - 2 Customers
 - 2 Products
 - 2 Purchases
 - 1 Refund
-```
-```
+
 ## 📧 Email System Details
-```
+
 ### Why ElasticEmail?
 I chose ElasticEmail because:
 - Free tier: 100 emails/day
 - No phone verification needed
 - Works in restricted regions
 
-```
 ### Alternative Email Options (Not Used)
 1. **Gmail**
    - Requires 2FA
@@ -173,16 +159,15 @@ I chose ElasticEmail because:
 2. **Outlook**
    - Requires phone verification
    - Regional restrictions
-   
-```
+
+3. **Twilio,Brevo**
+   - Free email sending API
+   - Requires phone number verification, which does not work in some regions
+
+
+
 ## 🔄 Future Improvements
 
 - Email failure notifications
 - Better error handling
 - Database optimization
-
-
-
-
-
-
