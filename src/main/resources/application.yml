@@ -12,7 +12,7 @@ spring:
   # JPA Configuration
   jpa:
     hibernate:
-      ddl-auto: update   #create-drop   pdate 
+      ddl-auto: create-drop #create-drop   pdate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
@@ -26,23 +26,27 @@ spring:
       password: test
 
   # Email Configuration
-  
   mail:
-    host: sandbox.smtp.mailtrap.io
+    host: smtp.elasticemail.com
     port: 2525
-    username: e5884142eab9e3   # Replace with your Gmail
-    password: 3d6e6181221576        # Replace with your app password
+    username: ebtisamalaama@gmail.com
+    password: 2A5FF5C4131477E0A9B3DCBB4B223C0F0FB5
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-          ssl:
-            enable: false 
+    from: test.test13390@outlook.com
+    to: Ebtisamalaama@gmail.com        
+      
+
+       
+  
+  
 
 # Logging Configuration
 logging:
   level:
-    '[org.springframework.security]': DEBUG
-
+    "[org.springframework.security]": DEBUG
+    "[org.springframework.mail]": DEBUG

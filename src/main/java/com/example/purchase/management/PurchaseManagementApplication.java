@@ -7,9 +7,13 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 //import com.example.purchase.management.config.ReportProperties;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.example.purchase.management.config.EmailProperties;
+
 @EntityScan("com.example.purchase.management.entity")
 @SpringBootApplication
 @EnableScheduling
+@EnableConfigurationProperties(EmailProperties.class)
+
 
 public class PurchaseManagementApplication {
 

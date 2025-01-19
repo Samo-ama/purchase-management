@@ -8,9 +8,14 @@ import com.example.purchase.management.service.RefundService;
 import com.example.purchase.management.service.ReportService;
 import com.example.purchase.management.report.ReportGenerator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+import java.time.LocalDate;
+
 //import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
@@ -19,33 +24,36 @@ public class ReportServiceImpl implements ReportService {
     private final RefundRepository refundRepository;
     private final EmailService emailService;
     private final ReportGenerator reportGenerator;
-    private final PurchaseService purchaseService ;
-    private final RefundService refundService ;
+    private final PurchaseService purchaseService;
+    private final RefundService refundService;
 
-
-    
-     // Temporarily hardcoded email
-     private final String reportEmail = "Ebtisamalaama@gmail.com";
-    
+    // Temporarily hardcoded email
+    private final String reportEmail = "Ebtisamalaama@gmail.com";
 
     @Override
     public void generateAndSendReport() {
+        try {
+        /*
+         * //All purchase and refund transactions
+         * var purchases = purchaseRepository.findAll();
+         * var refunds = refundRepository.findAll();
+         */
 
-       /*  //All purchase and refund transactions
-        var purchases = purchaseRepository.findAll();
-        var refunds = refundRepository.findAll(); 
- */
-
-        // Get yesterday's transactions 
+        // Get yesterday's transactions
         var purchases = purchaseService.getYesterdayPurchases();
-        var refunds = refundService.getYesterdayRefunds();  
+        var refunds = refundService.getYesterdayRefunds();
 
         String htmlReport = reportGenerator.generateReport(purchases, refunds);
-        
+
         emailService.sendHtmlEmail(
-            reportEmail,
-            "Transactions Report - Test",
-            htmlReport
-        );
+                "Daily Transactions Report - " + LocalDate.now().minusDays(1),
+                htmlReport
+            );
+            log.info("Report generated and sent successfully");
+
+    } catch (Exception e) {
+        log.error("Failed to generate and send report: ", e);
+        throw new RuntimeException("Failed to generate and send report", e);
+    }
     }
 }

@@ -4,6 +4,7 @@ import com.example.purchase.management.entity.Purchase;
 import com.example.purchase.management.entity.Refund;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class HtmlReportGenerator implements ReportGenerator {
@@ -30,8 +31,10 @@ public class HtmlReportGenerator implements ReportGenerator {
         html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Last Name</th>");
         html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Phone</th>");
         html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Product</th>");
-        html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Amount</th></tr>");
+        html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Amount</th>");
+        html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Created Date</th></tr>");
         
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         for (Purchase purchase : purchases) {
             html.append("<tr style='background-color: #f9f9f9;'>");
             html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(purchase.getId()).append("</td>");
@@ -39,7 +42,8 @@ public class HtmlReportGenerator implements ReportGenerator {
             html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(purchase.getCustomer().getLastName()).append("</td>");
             html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(purchase.getCustomer().getPhone()).append("</td>");
             html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(purchase.getProduct().getName()).append("</td>");
-            html.append("<td style='padding: 12px; border: 1px solid #ddd;'>$").append(purchase.getAmount()).append("</td>");
+            html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(purchase.getAmount()).append("</td>");
+            html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(purchase.getDate().format(formatter)).append("</td>");
             html.append("</tr>");
         }
         
@@ -55,8 +59,10 @@ public class HtmlReportGenerator implements ReportGenerator {
         html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Last Name</th>");
         html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Phone</th>");
         html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Purchase ID</th>");
-        html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Amount</th></tr>");
+        html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Amount</th>");
+        html.append("<th style='padding: 12px; border: 1px solid #ddd;'>Created Date</th></tr>");
         
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         for (Refund refund : refunds) {
             html.append("<tr style='background-color: #f9f9f9;'>");
             html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(refund.getId()).append("</td>");
@@ -64,7 +70,8 @@ public class HtmlReportGenerator implements ReportGenerator {
             html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(refund.getCustomer().getLastName()).append("</td>");
             html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(refund.getCustomer().getPhone()).append("</td>");
             html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(refund.getPurchase().getId()).append("</td>");
-            html.append("<td style='padding: 12px; border: 1px solid #ddd;'>$").append(refund.getAmount()).append("</td>");
+            html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(refund.getAmount()).append("</td>");
+            html.append("<td style='padding: 12px; border: 1px solid #ddd;'>").append(refund.getDate().format(formatter)).append("</td>");
             html.append("</tr>");
         }
         
