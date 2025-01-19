@@ -108,7 +108,7 @@ spring:
     from: your-verified@elasticemail.com
     to: recipient@example.com
   
-    
+```    
 ### 3. Run Application
 ```bash
 
@@ -116,13 +116,13 @@ spring:
 
 
 ```
-### 5. Verify Installation
+### 4. Verify Installation
 - Application runs on: `http://localhost:8080`
 - Database seeder will automatically populate sample data
 - Daily reports will be sent to configured email
 
 ```
-
+```
 ## 🔍 API Testing
 
 ### Using Postman
@@ -130,7 +130,7 @@ spring:
    - Username: test
    - Password: test
 
-
+```
 ## 🔍 Troubleshooting
 
 
@@ -148,23 +148,23 @@ spring:
 
 
 
-
+```
 ### Sample Data
 The seeder creates:
 - 2 Customers
 - 2 Products
 - 2 Purchases
 - 1 Refund
-
+```
 ## 📧 Email System Details
-
+```
 ### Why ElasticEmail?
 I chose ElasticEmail because:
 - Free tier: 100 emails/day
 - No phone verification needed
 - Works in restricted regions
 
-
+```
 ### Alternative Email Options (Not Used)
 1. **Gmail**
    - Requires 2FA
@@ -175,7 +175,7 @@ I chose ElasticEmail because:
    - Requires phone verification
    - Regional restrictions
    
-
+```
 ## 🔄 Future Improvements
 
 - Email failure notifications
