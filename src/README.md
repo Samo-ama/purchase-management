@@ -121,7 +121,7 @@ spring:
 - Database seeder will automatically populate sample data
 - Daily reports will be sent to configured email
 
-```
+
 ```
 ## 🔍 API Testing
 
@@ -129,6 +129,9 @@ spring:
 1. Set Basic Auth:
    - Username: test
    - Password: test
+   ```
+
+
 
 ```
 ## 🔍 Troubleshooting
@@ -136,12 +139,7 @@ spring:
 
 ### Common Issues
 
-1. **Database Connection Failed**
-   ```
-   Solution: Check PostgreSQL is running and credentials are correct
-   ```
-
-2. **Email Not Sending**
+ **Email Not Sending**
    ```
    Solution: Verify ElasticEmail credentials and sender email is verified
    ```
@@ -155,6 +153,7 @@ The seeder creates:
 - 2 Products
 - 2 Purchases
 - 1 Refund
+```
 ```
 ## 📧 Email System Details
 ```
