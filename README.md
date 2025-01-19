@@ -164,7 +164,9 @@ I chose ElasticEmail because:
    - Free email sending API
    - Requires phone number verification, which does not work in some regions
 
-
+## 📸 Report Screenshot
+Here’s an example of the generated report:
+![Generated Report](src/main/resources/static/images/screenshots/report.png)
 
 ## 🔄 Future Improvements
 
