@@ -37,8 +37,8 @@ spring:
           auth: true
           starttls:
             enable: true
-    from: test.test13390@outlook.com
-    to: Ebtisamalaama@gmail.com        
+      from: test.test13390@outlook.com
+      to: Ebtisamalaama@gmail.com        
       
 
        
