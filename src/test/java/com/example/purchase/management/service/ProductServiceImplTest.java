@@ -2,14 +2,11 @@ package com.example.purchase.management.service.impl;
 
 import com.example.purchase.management.entity.Product;
 import com.example.purchase.management.repository.ProductRepository;
-import jakarta.inject.Inject;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.ArrayList;
@@ -23,10 +20,8 @@ class ProductServiceImplTest {
 
     @InjectMocks
     private ProductServiceImpl productService;
-
     @Mock
     private ProductRepository productRepository;
-
     private Product validProduct;
 
     @BeforeEach
@@ -65,8 +60,8 @@ class ProductServiceImplTest {
         );
         assertEquals("Product name is required", exp.getMessage());
         verify(productRepository, never()).save(validProduct);
-
     }
+
     @Test
     public void createProduct_WithEmptyName_ShouldThrowIllegalArgException(){
         //Arrange
@@ -80,7 +75,6 @@ class ProductServiceImplTest {
         );
         assertEquals("Product name is required", exp.getMessage());
         verify(productRepository, never()).save(validProduct);
-
     }
 
     @Test
@@ -97,6 +91,7 @@ class ProductServiceImplTest {
         assertEquals("Valid price is required", exp.getMessage());
         verify(productRepository, never()).save(validProduct);
     }
+
     @Test
     public void createProduct_WithNegativePrice_ShouldThrowIllegalArgException(){
         //Arrange
@@ -143,7 +138,6 @@ class ProductServiceImplTest {
 
         when(productRepository.findById(productId)).thenReturn(Optional.empty());
 
-
         // Act & Assert
         var exp = assertThrows(
                 EntityNotFoundException.class,
@@ -170,7 +164,6 @@ class ProductServiceImplTest {
         assertEquals("Valid price is required", exp.getMessage());
     }
 
-
     @Test
     public void updateProduct_WithInvalidName_ShouldThrowIllegalArgException() {
         // Arrange
@@ -185,7 +178,7 @@ class ProductServiceImplTest {
         var exp = assertThrows(IllegalArgumentException.class, () -> {
             productService.updateProduct(productId, updatedProduct);
         });
-        assertEquals("Valid name is required", exp.getMessage());
+        assertEquals("Product name is required", exp.getMessage());
     }
 
     @Test
@@ -193,7 +186,6 @@ class ProductServiceImplTest {
         // Arrange
         Long productId = 1L;
 
-        // Mock
         when(productRepository.existsById(productId)).thenReturn(true);
 
         // Act
@@ -214,7 +206,6 @@ class ProductServiceImplTest {
         products.add(validProduct);
         products.add(validProduct2);
 
-        // Mock
         when(productRepository.findAll()).thenReturn(products);
 
         // Act
@@ -230,7 +221,6 @@ class ProductServiceImplTest {
         // Arrange
         List<Product> products = new ArrayList<>();
 
-        // Mock
         when(productRepository.findAll()).thenReturn(products);
 
         // Act
