@@ -21,9 +21,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
+        
     private Product product1;
     private Product product2;
-
     private List<Product> all;
 
     @BeforeEach
