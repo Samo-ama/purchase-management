@@ -1,7 +1,9 @@
-package com.example.purchase.management.service.impl;
+package com.example.purchase.management.service;
 
 import com.example.purchase.management.entity.Product;
 import com.example.purchase.management.repository.ProductRepository;
+import com.example.purchase.management.service.impl.ProductServiceImpl;
+
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
