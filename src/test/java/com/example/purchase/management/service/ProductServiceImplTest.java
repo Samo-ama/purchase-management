@@ -3,7 +3,6 @@ package com.example.purchase.management.service;
 import com.example.purchase.management.entity.Product;
 import com.example.purchase.management.repository.ProductRepository;
 import com.example.purchase.management.service.impl.ProductServiceImpl;
-
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -131,7 +130,7 @@ class ProductServiceImplTest {
     }
 
     @Test
-    public void updateProduct_WithNonExistedProduct_ShouldThrowNotFoundException() {
+    public void updateProduct_WithNonExistentProduct_ShouldThrowEntityNotFoundException() {
         // Arrange
         Long productId = 2L;
         Product updateData = new Product();
@@ -195,6 +194,24 @@ class ProductServiceImplTest {
 
         // Assert
         verify(productRepository, times(1)).deleteById(productId);
+    }
+
+    @Test
+    public void deleteProduct_ProductDoesNotExist_ShouldShouldThrowEntityNotFoundException() {
+        // Arrange
+        Long productId = 100L;
+
+        when(productRepository.existsById(productId)).thenReturn(false);
+
+        // Act & Assert
+        var exp = assertThrows(
+                EntityNotFoundException.class,
+                () -> {
+                    productService.deleteProduct(productId);
+                }
+        );
+        assertEquals("Product not found", exp.getMessage());
+        verify(productRepository, never()).deleteById(productId);
     }
 
     @Test
