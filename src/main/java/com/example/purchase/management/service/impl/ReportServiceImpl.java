@@ -27,33 +27,24 @@ public class ReportServiceImpl implements ReportService {
     private final PurchaseService purchaseService;
     private final RefundService refundService;
 
-    // Temporarily hardcoded email
-    private final String reportEmail = "Ebtisamalaama@gmail.com";
-
     @Override
     public void generateAndSendReport() {
         try {
-        /*
-         * //All purchase and refund transactions
-         * var purchases = purchaseRepository.findAll();
-         * var refunds = refundRepository.findAll();
-         */
 
-        // Get yesterday's transactions
-        var purchases = purchaseService.getYesterdayPurchases();
-        var refunds = refundService.getYesterdayRefunds();
+            // Get yesterday's transactions
+            var purchases = purchaseService.getYesterdayPurchases();
+            var refunds = refundService.getYesterdayRefunds();
 
-        String htmlReport = reportGenerator.generateReport(purchases, refunds);
+            String htmlReport = reportGenerator.generateReport(purchases, refunds);
 
-        emailService.sendHtmlEmail(
-                "Daily Transactions Report - " + LocalDate.now().minusDays(1),
-                htmlReport
-            );
+            emailService.sendHtmlEmail(
+                    "Daily Transactions Report - " + LocalDate.now().minusDays(1),
+                    htmlReport);
             log.info("Report generated and sent successfully");
 
-    } catch (Exception e) {
-        log.error("Failed to generate and send report: ", e);
-        throw new RuntimeException("Failed to generate and send report", e);
-    }
+        } catch (Exception e) {
+            log.error("Failed to generate and send report: ", e);
+            throw new RuntimeException("Failed to generate and send report", e);
+        }
     }
 }
