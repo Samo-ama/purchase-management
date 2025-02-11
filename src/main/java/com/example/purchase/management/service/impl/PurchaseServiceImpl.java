@@ -54,4 +54,6 @@ public class PurchaseServiceImpl implements PurchaseService {
         LocalDateTime end = LocalDate.now().atStartOfDay();
         return purchaseRepository.findAllByDateBetween(start, end);
     }
+
+    
 }
