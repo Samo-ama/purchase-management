@@ -21,6 +21,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -58,7 +59,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void getAllProducts_WithUnauthenticatedUser_ShouldReturnUnauthorized() throws Exception {
+    public void getAllProducts_WithoutAuthentication_ShouldReturnUnauthorized() throws Exception {
         // Arrange
         when(productService.getAllProducts()).thenReturn(products);
 
@@ -86,6 +87,24 @@ public class ProductControllerTest {
 
         // Assert
         response.andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void createProduct_WithInValidUserCredentials_ShouldReturnCreatedProduct() throws Exception {
+        // Arrange
+        when(productService.createProduct(any(Product.class))).thenReturn(product1);
+
+        // Act
+        ResultActions response = mockMvc.perform(
+                post("/product")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .with(httpBasic("test", "wrong_password"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(product1))
+        );
+
+        // Assert
+        response.andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -244,4 +263,6 @@ public class ProductControllerTest {
         //Assert
         response.andExpect(status().isNotFound());
     }
+
+
 }
