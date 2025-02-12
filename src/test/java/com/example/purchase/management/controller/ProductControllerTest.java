@@ -90,7 +90,7 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void createProduct_WithInValidUserCredentials_ShouldReturnCreatedProduct() throws Exception {
+    public void createProduct_WithInValidUserCredentials_ShouldReturnUnauthorized() throws Exception {
         // Arrange
         when(productService.createProduct(any(Product.class))).thenReturn(product1);
 
