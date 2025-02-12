@@ -1,5 +1,6 @@
 package com.example.purchase.management.controller;
 
+import com.example.purchase.management.config.SecurityConfig;
 import com.example.purchase.management.entity.Product;
 import com.example.purchase.management.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,11 +8,10 @@ import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -24,9 +24,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@WithMockUser
+@WebMvcTest(ProductController.class)
+@Import(SecurityConfig.class)
 public class ProductControllerTest {
 
     @Autowired
