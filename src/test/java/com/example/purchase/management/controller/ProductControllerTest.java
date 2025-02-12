@@ -58,13 +58,28 @@ public class ProductControllerTest {
     }
 
     @Test
-    public void createProduct_WithUnauthenticatedUser_ShouldReturnForbidden() throws Exception {
+    public void getAllProducts_WithUnauthenticatedUser_ShouldReturnUnauthorized() throws Exception {
+        // Arrange
+        when(productService.getAllProducts()).thenReturn(products);
+
+        // Act
+        ResultActions response = mockMvc.perform(get("/product")
+        );
+
+        // Assert
+        response.andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @WithMockUser
+    public void createProduct_WithoutCsrf_ShouldReturnForbidden() throws Exception {
         // Arrange
         when(productService.createProduct(any(Product.class))).thenReturn(product1);
 
         // Act
         ResultActions response = mockMvc.perform(
                 post("/product")
+                        // we need to add a CSRF token to the request
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(product1))
         );
@@ -146,10 +161,10 @@ public class ProductControllerTest {
 
         // Act
         ResultActions response = mockMvc.perform(
-                        put("/product/{id}", productId)
-                                .with(SecurityMockMvcRequestPostProcessors.csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(product1))
+                put("/product/{id}", productId)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(product1))
         );
 
 //        String responseBody = response.andReturn().getResponse().getContentAsString();
@@ -186,10 +201,10 @@ public class ProductControllerTest {
 
         // Act
         ResultActions response = mockMvc.perform(
-                        put("/product/{id}", productId)
-                                .with(SecurityMockMvcRequestPostProcessors.csrf())
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(product1))
+                put("/product/{id}", productId)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(product1))
         );
 
         // Assert
