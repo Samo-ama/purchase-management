@@ -49,6 +49,8 @@ public class CustomerController {
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
+        } catch (IllegalArgumentException e){
+            return ResponseEntity.badRequest().build();
         }
     }
 
@@ -57,5 +59,7 @@ public class CustomerController {
      public ResponseEntity<List<Customer>> getAllCustomers() {
          return ResponseEntity.ok(customerService.getAllCustomers());
      }
+
+     
 
 }
