@@ -42,7 +42,7 @@ class EmailServiceImplTest {
         String htmlContent = "<h1>report data</h1>";
         String mailAddress = "baylasan@test.me";
 
-        // Mock email properties
+        // Mock
         when(emailProperties.getFrom()).thenReturn(mailAddress);
         when(emailProperties.getTo()).thenReturn(mailAddress);
 
