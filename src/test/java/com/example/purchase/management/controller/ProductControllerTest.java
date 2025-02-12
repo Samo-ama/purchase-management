@@ -1,6 +1,5 @@
 package com.example.purchase.management.controller;
 
-import com.example.purchase.management.config.SecurityConfig;
 import com.example.purchase.management.entity.Product;
 import com.example.purchase.management.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,8 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProductController.class)
-@Import(SecurityConfig.class)
+
 public class ProductControllerTest {
 
     @Autowired
@@ -58,6 +58,23 @@ public class ProductControllerTest {
     }
 
     @Test
+    public void createProduct_WithUnauthenticatedUser_ShouldReturnForbidden() throws Exception {
+        // Arrange
+        when(productService.createProduct(any(Product.class))).thenReturn(product1);
+
+        // Act
+        ResultActions response = mockMvc.perform(
+                post("/product")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(product1))
+        );
+
+        // Assert
+        response.andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser
     public void createProduct_WithValidProduct_ShouldReturnCreatedProduct() throws Exception {
         // Arrange
         when(productService.createProduct(any(Product.class))).thenReturn(product1);
@@ -65,6 +82,7 @@ public class ProductControllerTest {
         // Act
         ResultActions response = mockMvc.perform(
                 post("/product")
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(product1))
         );
@@ -84,6 +102,9 @@ public class ProductControllerTest {
         // Act
         ResultActions response = mockMvc.perform(
                 post("/product")
+                        .with(SecurityMockMvcRequestPostProcessors
+                                .user("test").password("test").roles("User"))
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(product1))
         );
@@ -93,12 +114,14 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void getAllProducts_ShouldReturnAllProducts() throws Exception {
         // Arrange
         when(productService.getAllProducts()).thenReturn(products);
 
         // Act
-        ResultActions response = mockMvc.perform(get("/product"));
+        ResultActions response = mockMvc.perform(get("/product")
+        );
 
 //        String responseBody = response.andReturn().getResponse().getContentAsString();
 //        System.out.println("response : " + responseBody);
@@ -115,6 +138,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void updateProduct_WithValidProduct_ShouldUpdateProduct() throws Exception {
         // Arrange
         Long productId = 1L;
@@ -124,8 +148,9 @@ public class ProductControllerTest {
         // Act
         ResultActions response = mockMvc.perform(
                         put("/product/{id}", productId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(product1))
+                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(product1))
         );
 
 //        String responseBody = response.andReturn().getResponse().getContentAsString();
@@ -153,6 +178,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void updateProduct_WithNonExistentProduct_ShouldReturnNotFound() throws Exception {
         // Arrange
         Long productId = 99L;
@@ -162,8 +188,9 @@ public class ProductControllerTest {
         // Act
         ResultActions response = mockMvc.perform(
                         put("/product/{id}", productId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(product1))
+                                .with(SecurityMockMvcRequestPostProcessors.csrf())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(product1))
         );
 
         // Assert
@@ -171,6 +198,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void deleteProduct_WithExistentProduct_ShouldDeleteProduct() throws Exception {
         // Arrange
         Long productId = 1L;
@@ -179,6 +207,7 @@ public class ProductControllerTest {
         // Act
         ResultActions response = mockMvc.perform(
                 delete("/product/{id}", productId)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
         );
 
         //Assert
@@ -186,6 +215,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void deleteProduct_WithNonExistentProduct_ShouldReturnNotFound() throws Exception {
         // Arrange
         Long productId = 1L;
@@ -194,6 +224,7 @@ public class ProductControllerTest {
         // Act
         ResultActions response = mockMvc.perform(
                 delete("/product/{id}", productId)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
         );
 
         //Assert
