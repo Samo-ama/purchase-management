@@ -94,6 +94,7 @@ public class ProductControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void createProduct_WithInvalidProduct_ShouldReturnBadRequest() throws Exception {
         // Arrange
         when(productService.createProduct(any(Product.class)))
@@ -102,8 +103,6 @@ public class ProductControllerTest {
         // Act
         ResultActions response = mockMvc.perform(
                 post("/product")
-                        .with(SecurityMockMvcRequestPostProcessors
-                                .user("test").password("test").roles("User"))
                         .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(product1))
