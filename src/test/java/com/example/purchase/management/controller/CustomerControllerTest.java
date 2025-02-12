@@ -242,6 +242,41 @@ public class CustomerControllerTest {
 
     }
 
+    //Authentication
+
+    /**
+     * Test authentication failure with wrong credentials
+     */
+    @Test
+    void whenInvalidCredentials_thenUnauthorized() throws Exception {
+        mockMvc.perform(get("/customer")
+                .with(csrf())
+                .with(httpBasic("admin", "admin")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    
+    /**
+     * Test authentication failure with no credentials
+     */
+    @Test
+    void whenNoCredentials_thenUnauthorized() throws Exception {
+        mockMvc.perform(get("/customer")
+               .with(csrf()))
+               .andExpect(status().isUnauthorized());
+    }
+
+     /**
+     * Test authentication with empty credentials
+     */
+    @Test
+    void whenEmptyCredentials_thenUnauthorized() throws Exception {
+        mockMvc.perform(get("/customer")
+                .with(httpBasic("", "")))
+                .andExpect(status().isUnauthorized());
+    }
+
+
     
  
 
