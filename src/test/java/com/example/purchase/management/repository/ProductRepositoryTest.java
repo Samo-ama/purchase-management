@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureTestDatabase(
         connection = EmbeddedDatabaseConnection.H2
 )
-
 class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
@@ -49,7 +48,7 @@ class ProductRepositoryTest {
 
     @Test
     public void findById_ProductNotExist_ShouldReturnEmpty(){
-        Optional<Product> notExistedProduct = productRepository.findById(0L);
+        Optional<Product> notExistedProduct = productRepository.findById(999L);
 
         assertTrue(notExistedProduct.isEmpty());
     }
@@ -62,9 +61,9 @@ class ProductRepositoryTest {
         int actualSize = all.size();
 
         assertNotNull(products);
-        assertEquals(all.size(), products.size());
+        assertEquals(expectedSize, actualSize);
         assertEquals(all.get(0), products.get(0));
-        assertEquals(all.get(expectedSize-1), products.get(actualSize-1));
+        assertEquals(all.get(expectedSize - 1), products.get(actualSize - 1));
     }
 
     @Test
@@ -74,7 +73,44 @@ class ProductRepositoryTest {
 
         Optional<Product> foundProduct = productRepository.findById(product2.getId());
         assertFalse(foundProduct.isPresent());
-        assertEquals(productsSizeBefore - 1 ,productRepository.findAll().size());
+        assertEquals(productsSizeBefore - 1, productRepository.findAll().size());
+    }
+
+    @Test
+    public void create_Product_ShouldSaveProduct(){
+        // Act
+        Product savedProduct = productRepository.save(product1);
+
+        // Assert
+        assertNotNull(savedProduct);
+        assertEquals(product1.getName(), savedProduct.getName());
+        assertEquals(product1.getPrice(), savedProduct.getPrice());
+
+        Optional<Product> retrievedProduct = productRepository.findById(savedProduct.getId());
+
+        assertTrue(retrievedProduct.isPresent());
+        assertEquals(savedProduct.getId(), retrievedProduct.get().getId());
+    }
+
+    @Test
+    public void update_Product_ShouldSaveUpdates(){
+        // Arrange
+        String newLapName = "Asus Lap ";
+        Product existingProduct = productRepository.findById(product1.getId()).orElseThrow();
+
+        // Act
+        existingProduct.setName(newLapName);
+        Product updatedProduct = productRepository.save(existingProduct);
+
+        // Assert
+        assertNotNull(updatedProduct);
+        assertEquals(existingProduct.getId(), updatedProduct.getId());
+        assertEquals(newLapName, updatedProduct.getName());
+
+        Optional<Product> foundProduct = productRepository.findById(existingProduct.getId());
+        assertTrue(foundProduct.isPresent());
+        assertEquals(newLapName, foundProduct.get().getName());
+
     }
 
 }
