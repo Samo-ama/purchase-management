@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -66,11 +67,33 @@ class EmailServiceImplTest {
         // Act & Assert
         var exp = assertThrows(
                 RuntimeException.class,
-                () -> emailService.sendHtmlEmail(subject, htmlContent)
-        );
+                () -> emailService.sendHtmlEmail(subject, htmlContent));
 
         assertEquals("Failed to send email", exp.getMessage());
         verify(mailSender, never()).send(any(MimeMessage.class));
     }
+
+    @Test
+    public void sendHtmlEmail_WhenSendingMessageFails_ShouldHandleException() throws Exception {
+        // Arrange
+        String subject = "Test Subject";
+        String htmlContent = "<h1>Test Email</h1>";
+        String fromEmail = "test@example.com";
+        String toEmail = "recipient@example.com";
+
+        when(emailProperties.getFrom()).thenReturn(fromEmail);
+        when(emailProperties.getTo()).thenReturn(toEmail);
+
+        doThrow(new MailException("Failed to send") {})
+                .when(mailSender).send(any(MimeMessage.class));
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            emailService.sendHtmlEmail(subject, htmlContent);
+        });
+
+        assertEquals("Failed to send email", exception.getMessage());
+    }
+
 
 }
