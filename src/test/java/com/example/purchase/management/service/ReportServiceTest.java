@@ -4,7 +4,6 @@ import com.example.purchase.management.entity.Purchase;
 import com.example.purchase.management.entity.Refund;
 import com.example.purchase.management.service.impl.ReportServiceImpl;
 import com.example.purchase.management.report.ReportGenerator;
-import com.example.purchase.management.service.impl.EmailServiceImpl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,7 +54,7 @@ public class ReportServiceTest {
         testPurchases = Arrays.asList(new Purchase());
         testRefunds = Arrays.asList(new Refund());
         testHtmlReport = "<html>Test Report</html>";
-        //yesterday = LocalDate.now().minusDays(1).atStartOfDay();
+        
     }
 
     /**
@@ -97,6 +96,26 @@ public class ReportServiceTest {
 
         assertEquals("Failed to generate and send report", exception.getMessage());
         verify(emailService, never()).sendHtmlEmail(anyString(), anyString());
+    }
+
+    /**
+     * Test report generation when email service fails
+     * Expected: Should throw RuntimeException
+     */
+    @Test
+    void generateAndSendReport_WhenEmailServiceFails_ShouldThrowException() {
+        // Arrange
+        when(purchaseService.getYesterdayPurchases()).thenReturn(testPurchases);
+        when(refundService.getYesterdayRefunds()).thenReturn(testRefunds);
+        when(reportGenerator.generateReport(testPurchases, testRefunds)).thenReturn(testHtmlReport);
+        doThrow(new RuntimeException("Email service failed"))
+            .when(emailService).sendHtmlEmail(anyString(), anyString());
+
+        // Act
+        RuntimeException exception = assertThrows(RuntimeException.class,
+            () -> reportService.generateAndSendReport());
+
+        assertEquals("Failed to generate and send report", exception.getMessage());
     }
 
 
