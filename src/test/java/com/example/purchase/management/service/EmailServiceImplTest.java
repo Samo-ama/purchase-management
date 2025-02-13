@@ -55,7 +55,7 @@ class EmailServiceImplTest {
     }
 
     @Test
-    public void sendHtmlEmail_WithInvalidProperties_ShouldThrowException() {
+    public void sendHtmlEmail_WithInvalidProperties_ShouldThrowRuntimeException() {
         // Arrange
         String subject = "report";
         String htmlContent = "<h1>report data</h1>";
@@ -74,7 +74,7 @@ class EmailServiceImplTest {
     }
 
     @Test
-    public void sendHtmlEmail_WhenSendingMessageFails_ShouldHandleException() throws Exception {
+    public void sendHtmlEmail_WhenSendingMessageFails_ShouldThrowRuntimeException() throws Exception {
         // Arrange
         String subject = "Test Subject";
         String htmlContent = "<h1>Test Email</h1>";
