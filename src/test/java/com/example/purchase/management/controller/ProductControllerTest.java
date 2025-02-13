@@ -69,6 +69,8 @@ public class ProductControllerTest {
 
         // Assert
         response.andExpect(status().isUnauthorized());
+        verify(productService, never()).createProduct(any(Product.class));
+
     }
 
     @Test
@@ -87,6 +89,8 @@ public class ProductControllerTest {
 
         // Assert
         response.andExpect(status().isForbidden());
+        verify(productService, never()).createProduct(any(Product.class));
+
     }
 
     @Test
@@ -105,6 +109,7 @@ public class ProductControllerTest {
 
         // Assert
         response.andExpect(status().isUnauthorized());
+        verify(productService, never()).createProduct(any(Product.class));
     }
 
     @Test
@@ -125,6 +130,7 @@ public class ProductControllerTest {
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(product1.getName()))
                 .andExpect(jsonPath("$.price").value(product1.getPrice()));
+        verify(productService, times(1)).createProduct(any(Product.class));
     }
 
     @Test
@@ -144,6 +150,8 @@ public class ProductControllerTest {
 
         // Assert
         response.andExpect(status().isBadRequest());
+        verify(productService, times(1)).createProduct(any(Product.class));
+
     }
 
     @Test
@@ -193,9 +201,13 @@ public class ProductControllerTest {
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value(product1.getName()))
                 .andExpect(jsonPath("$.price").value(product1.getPrice()));
+
+        verify(productService, times(1))
+                .updateProduct(eq(productId), any(Product.class));
     }
 
     @Test
+    @WithMockUser
     public void updateProduct_WithInValidProduct_ShouldReturnBadRequest() throws Exception {
         // Arrange
         Long productId = 1L;
@@ -205,9 +217,13 @@ public class ProductControllerTest {
         // Act
         ResultActions response = mockMvc.perform(
                 put("/product/{id}", productId)
+                        .with(SecurityMockMvcRequestPostProcessors.csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(product1))
         );
+
+        // Assert
+        response.andExpect(status().isBadRequest());
     }
 
     @Test
@@ -228,6 +244,8 @@ public class ProductControllerTest {
 
         // Assert
         response.andExpect(status().isNotFound());
+        verify(productService, times(1))
+                .updateProduct(anyLong(), any(Product.class));
     }
 
     @Test
@@ -245,6 +263,8 @@ public class ProductControllerTest {
 
         //Assert
         response.andExpect(status().isOk());
+        verify(productService, times(1))
+                .deleteProduct(productId);
     }
 
     @Test
@@ -262,7 +282,7 @@ public class ProductControllerTest {
 
         //Assert
         response.andExpect(status().isNotFound());
+        verify(productService, times(1))
+                .deleteProduct(productId);
     }
-
-
 }
