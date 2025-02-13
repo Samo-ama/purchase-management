@@ -46,4 +46,6 @@ public class ReportServiceImpl implements ReportService {
             throw new RuntimeException("Failed to generate and send report", e);
         }
     }
+
+    
 }

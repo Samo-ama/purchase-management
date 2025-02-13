@@ -66,8 +66,7 @@ class EmailServiceImplTest {
         // Act & Assert
         var exp = assertThrows(
                 RuntimeException.class,
-                () -> emailService.sendHtmlEmail(subject, htmlContent)
-        );
+                () -> emailService.sendHtmlEmail(subject, htmlContent));
 
         assertEquals("Failed to send email", exp.getMessage());
         verify(mailSender, never()).send(any(MimeMessage.class));
