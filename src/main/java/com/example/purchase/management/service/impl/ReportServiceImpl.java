@@ -20,8 +20,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-    private final PurchaseRepository purchaseRepository;
-    private final RefundRepository refundRepository;
+   
     private final EmailService emailService;
     private final ReportGenerator reportGenerator;
     private final PurchaseService purchaseService;

@@ -11,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import com.example.purchase.management.config.SecurityConfig;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,11 +19,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 //@AutoConfigureMockMvc(addFilters = false) // disable security for tests
 @WebMvcTest(CustomerController.class)
-@Import(SecurityConfig.class)
 public class CustomerControllerTest {
 
     @Autowired
@@ -47,8 +46,10 @@ public class CustomerControllerTest {
         testCustomer.setLastName("safi");
         testCustomer.setPhone("0933333333");
 
+
     }
 
+    
     /**
      * Test creating a customer with valid data
      * Expected: Should return 200 OK and created customer
@@ -59,9 +60,11 @@ public class CustomerControllerTest {
         when(customerService.createCustomer(any(Customer.class))).thenReturn(testCustomer);
 
         mockMvc.perform(post("/customer")
-
+                .with(csrf())
+                .with(httpBasic("test", "test"))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testCustomer)))
+                .content(objectMapper.writeValueAsString(testCustomer))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.firstName").value(testCustomer.getFirstName()))
@@ -81,6 +84,8 @@ public class CustomerControllerTest {
                 .thenThrow(new IllegalArgumentException("Invalid data"));
 
         mockMvc.perform(post("/customer")
+                .with(csrf())
+                .with(httpBasic("test", "test"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testCustomer)))
                 .andExpect(status().isBadRequest());
@@ -97,7 +102,9 @@ public class CustomerControllerTest {
         List<Customer> customers = Arrays.asList(testCustomer);
         when(customerService.getAllCustomers()).thenReturn(customers);
 
-        mockMvc.perform(get("/customer"))
+        mockMvc.perform(get("/customer")
+               .with(httpBasic("test", "test")))
+                
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].firstName").value(testCustomer.getFirstName()))
@@ -115,7 +122,8 @@ public class CustomerControllerTest {
         // Arrange
         when(customerService.getAllCustomers()).thenReturn(Arrays.asList());
 
-        mockMvc.perform(get("/customer"))
+        mockMvc.perform(get("/customer")
+                .with(httpBasic("test", "test")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)))
                 .andExpect(jsonPath("$").isArray());
@@ -132,6 +140,8 @@ public class CustomerControllerTest {
         when(customerService.updateCustomer(eq(1L), any(Customer.class))).thenReturn(testCustomer);
 
         mockMvc.perform(put("/customer/1")
+                .with(csrf())
+                .with(httpBasic("test", "test"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testCustomer)))
                 .andExpect(status().isOk())
@@ -151,6 +161,8 @@ public class CustomerControllerTest {
                 .thenThrow(new jakarta.persistence.EntityNotFoundException());
 
         mockMvc.perform(put("/customer/1")
+                .with(csrf())
+                .with(httpBasic("test", "test"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testCustomer)))
                 .andExpect(status().isNotFound());
@@ -168,6 +180,8 @@ public class CustomerControllerTest {
         when(customerService.updateCustomer(eq(1L), any(Customer.class)))
                 .thenThrow(new IllegalArgumentException("Invalid data"));
         mockMvc.perform(put("/customer/1")
+                .with(csrf())
+                .with(httpBasic("test", "test"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testCustomer)))
                 .andExpect(status().isBadRequest());
@@ -184,7 +198,10 @@ public class CustomerControllerTest {
     void deleteCustomer_WithExistingId_ShouldReturnOk() throws Exception {
         doNothing().when(customerService).deleteCustomer(1L);
 
-        mockMvc.perform(delete("/customer/1"))
+        mockMvc.perform(delete("/customer/1")
+               .with(csrf())
+               .with(httpBasic("test", "test")))
+                
                 .andExpect(status().isOk());
 
         verify(customerService, times(1)).deleteCustomer(1L);
@@ -199,7 +216,9 @@ public class CustomerControllerTest {
         doThrow(new jakarta.persistence.EntityNotFoundException())
                 .when(customerService).deleteCustomer(1L);
 
-        mockMvc.perform(delete("/customer/1"))
+        mockMvc.perform(delete("/customer/1")
+               .with(csrf())
+               .with(httpBasic("test", "test")))
                 .andExpect(status().isNotFound());
 
         verify(customerService, times(1)).deleteCustomer(1L);
@@ -214,11 +233,53 @@ public class CustomerControllerTest {
 
         doThrow(new IllegalArgumentException("Invalid")).when(customerService).deleteCustomer(1L);
 
-        mockMvc.perform(delete("/customer/1"))
+        mockMvc.perform(delete("/customer/1")
+                .with(csrf())
+                .with(httpBasic("test", "test")))
                 .andExpect(status().isBadRequest());
 
         verify(customerService, times(1)).deleteCustomer(1L);
 
     }
+
+    //Authentication
+
+    /**
+     * Test authentication failure with wrong credentials
+     */
+    @Test
+    void whenInvalidCredentials_thenUnauthorized() throws Exception {
+        mockMvc.perform(get("/customer")
+                .with(csrf())
+                .with(httpBasic("admin", "admin")))
+                .andExpect(status().isUnauthorized());
+    }
+
+    
+    /**
+     * Test authentication failure with no credentials
+     */
+    @Test
+    void whenNoCredentials_thenUnauthorized() throws Exception {
+        mockMvc.perform(get("/customer")
+               .with(csrf()))
+               .andExpect(status().isUnauthorized());
+    }
+
+     /**
+     * Test authentication with empty credentials
+     */
+    @Test
+    void whenEmptyCredentials_thenUnauthorized() throws Exception {
+        mockMvc.perform(get("/customer")
+                .with(httpBasic("", "")))
+                .andExpect(status().isUnauthorized());
+    }
+
+
+    
+ 
+
+  
 
 }
