@@ -52,4 +52,9 @@ public class RefundServiceImpl implements RefundService {
         LocalDateTime end = LocalDate.now().atStartOfDay();
         return refundRepository.findAllByDateBetween(start, end);
     }
+
+    @Override
+    public List<Refund> getRefundBetween(LocalDateTime start, LocalDateTime end) {
+        return refundRepository.findAllByDateBetween(start, end);
+    }
 }

@@ -18,7 +18,7 @@ public class ReportController {
     public ResponseEntity<String> sendReport() {
         log.info("Received request to send report");
         try {
-            reportService.generateAndSendReport();
+            reportService.generateReport();
             
             return ResponseEntity.ok("Report sent successfully");
         } catch (Exception e) {

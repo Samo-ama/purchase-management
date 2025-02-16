@@ -1,7 +1,7 @@
 package com.example.purchase.management.service.impl;
 
 import com.example.purchase.management.config.EmailProperties;
-import com.example.purchase.management.service.EmailService;
+import com.example.purchase.management.service.SenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,7 +13,7 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
+public class EmailServiceImpl implements SenderService {
 
     private final JavaMailSender mailSender;
      private final EmailProperties emailProperties;
@@ -21,7 +21,7 @@ public class EmailServiceImpl implements EmailService {
     //private static final String TO_EMAIL = "Ebtisamalaama@gmail.com";
 
     @Override
-    public void sendHtmlEmail(String subject, String htmlContent) {
+    public void send(String subject, String htmlContent) {
         try {
             if (emailProperties.getFrom() == null) {
                 throw new IllegalStateException("From email address is not configured");

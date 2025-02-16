@@ -48,7 +48,7 @@ class EmailServiceImplTest {
         when(emailProperties.getTo()).thenReturn(mailAddress);
 
         // Act
-        emailService.sendHtmlEmail(subject, htmlContent);
+        emailService.send(subject, htmlContent);
 
         // Assert
         verify(mailSender, times(1)).send(mimeMsg);
@@ -67,7 +67,7 @@ class EmailServiceImplTest {
         // Act & Assert
         var exp = assertThrows(
                 RuntimeException.class,
-                () -> emailService.sendHtmlEmail(subject, htmlContent));
+                () -> emailService.send(subject, htmlContent));
 
         assertEquals("Failed to send email", exp.getMessage());
         verify(mailSender, never()).send(any(MimeMessage.class));
@@ -89,7 +89,7 @@ class EmailServiceImplTest {
 
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            emailService.sendHtmlEmail(subject, htmlContent);
+            emailService.send(subject, htmlContent);
         });
 
         assertEquals("Failed to send email", exception.getMessage());

@@ -55,5 +55,10 @@ public class PurchaseServiceImpl implements PurchaseService {
         return purchaseRepository.findAllByDateBetween(start, end);
     }
 
+    @Override
+    public List<Purchase> getPurchasesBetween(LocalDateTime start, LocalDateTime end) {
+        return purchaseRepository.findAllByDateBetween(start, end);
+}
+
     
 }

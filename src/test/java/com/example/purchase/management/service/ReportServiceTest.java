@@ -2,7 +2,7 @@ package com.example.purchase.management.service;
 
 import com.example.purchase.management.entity.Purchase;
 import com.example.purchase.management.entity.Refund;
-import com.example.purchase.management.service.impl.ReportServiceImpl;
+import com.example.purchase.management.service.impl.YesterdayTransactionReportService;
 import com.example.purchase.management.report.ReportGenerator;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 public class ReportServiceTest {
 
     @InjectMocks
-    private ReportServiceImpl reportService;
+    private YesterdayTransactionReportService reportService;
     
     @Mock
     private PurchaseService purchaseService;
@@ -38,7 +38,7 @@ public class ReportServiceTest {
     private ReportGenerator reportGenerator;
 
     @Mock
-    private EmailService emailService;
+    private SenderService emailService;
 
     private List<Purchase> testPurchases;
     private List<Refund> testRefunds;
@@ -69,13 +69,13 @@ public class ReportServiceTest {
         when(refundService.getYesterdayRefunds()).thenReturn(testRefunds);
         when(reportGenerator.generateReport(testPurchases, testRefunds)).thenReturn(testHtmlReport);
 
-        reportService.generateAndSendReport();
+        reportService.generateReport();
 
          // Assert
          verify(purchaseService).getYesterdayPurchases();
          verify(refundService).getYesterdayRefunds();
          verify(reportGenerator).generateReport(testPurchases, testRefunds);
-         verify(emailService).sendHtmlEmail(
+         verify(emailService).send(
              eq("Daily Transactions Report - " + LocalDate.now().minusDays(1)),
              eq(testHtmlReport) );
     }
@@ -92,10 +92,10 @@ public class ReportServiceTest {
 
         // Act & Assert
         RuntimeException exception = assertThrows(RuntimeException.class,
-            () -> reportService.generateAndSendReport());
+            () -> reportService.generateReport());
 
         assertEquals("Failed to generate and send report", exception.getMessage());
-        verify(emailService, never()).sendHtmlEmail(anyString(), anyString());
+        verify(emailService, never()).send(anyString(), anyString());
     }
 
     /**
@@ -109,11 +109,11 @@ public class ReportServiceTest {
         when(refundService.getYesterdayRefunds()).thenReturn(testRefunds);
         when(reportGenerator.generateReport(testPurchases, testRefunds)).thenReturn(testHtmlReport);
         doThrow(new RuntimeException("Email service failed"))
-            .when(emailService).sendHtmlEmail(anyString(), anyString());
+            .when(emailService).send(anyString(), anyString());
 
         // Act
         RuntimeException exception = assertThrows(RuntimeException.class,
-            () -> reportService.generateAndSendReport());
+            () -> reportService.generateReport());
 
         assertEquals("Failed to generate and send report", exception.getMessage());
     }
