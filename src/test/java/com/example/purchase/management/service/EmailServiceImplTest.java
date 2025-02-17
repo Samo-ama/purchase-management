@@ -1,6 +1,7 @@
 package com.example.purchase.management.service;
 
 import com.example.purchase.management.config.EmailProperties;
+import com.example.purchase.management.exception.ContentSizeExceededException;
 import com.example.purchase.management.service.impl.EmailServiceImpl;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -37,7 +38,7 @@ class EmailServiceImplTest {
     }
 
     @Test
-    public void sendHtmlEmail_WithValidProperties_ShouldSendReport() throws MessagingException {
+    public void sendEmail_WithValidProperties_ShouldSendReport() throws MessagingException, ContentSizeExceededException {
         // Arrange
         String subject = "report";
         String htmlContent = "<h1>report data</h1>";
@@ -55,7 +56,7 @@ class EmailServiceImplTest {
     }
 
     @Test
-    public void sendHtmlEmail_WithInvalidProperties_ShouldThrowRuntimeException() {
+    public void sendEmail_WithInvalidProperties_ShouldThrowRuntimeException() {
         // Arrange
         String subject = "report";
         String htmlContent = "<h1>report data</h1>";
@@ -66,15 +67,15 @@ class EmailServiceImplTest {
 
         // Act & Assert
         var exp = assertThrows(
-                RuntimeException.class,
+                IllegalStateException.class,
                 () -> emailService.send(subject, htmlContent));
 
-        assertEquals("Failed to send email", exp.getMessage());
+        assertEquals("sender email address is not configured", exp.getMessage());
         verify(mailSender, never()).send(any(MimeMessage.class));
     }
 
     @Test
-    public void sendHtmlEmail_WhenSendingMessageFails_ShouldThrowRuntimeException() throws Exception {
+    public void sendEmail_WhenSendingMessageFails_ShouldThrowRuntimeException() throws Exception {
         // Arrange
         String subject = "Test Subject";
         String htmlContent = "<h1>Test Email</h1>";
@@ -95,5 +96,25 @@ class EmailServiceImplTest {
         assertEquals("Failed to send email", exception.getMessage());
     }
 
+    @Test
+    public void sendEmail_WhenContentSizeExceeded_ShouldThrowContentSizeExceededException(){
+        // Arrange
+        String subject = "Test Subject";
 
+        StringBuilder largeContent = new StringBuilder();
+        for (int i = 0; i < 100 * 1024 * 1024; i++) {
+            largeContent.append("a");
+        }
+        String htmlContent = largeContent.toString();
+
+        // Mock
+        when(emailProperties.getFrom()).thenReturn("any@test.com");
+        when(emailProperties.getTo()).thenReturn("any@test.com");
+
+        // Act & Assert
+        assertThrows(
+                ContentSizeExceededException.class,
+                () -> emailService.send(subject, htmlContent)
+        );
+    }
 }

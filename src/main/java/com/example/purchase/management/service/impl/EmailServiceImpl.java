@@ -1,6 +1,7 @@
 package com.example.purchase.management.service.impl;
 
 import com.example.purchase.management.config.EmailProperties;
+import com.example.purchase.management.exception.ContentSizeExceededException;
 import com.example.purchase.management.service.SenderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,15 +18,25 @@ public class EmailServiceImpl implements SenderService {
 
     private final JavaMailSender mailSender;
      private final EmailProperties emailProperties;
+
+     private static final int Size_Limit = 25 * 1024 * 1024;
+
     //private static final String FROM_EMAIL = "test.test13390@outlook.com";
     //private static final String TO_EMAIL = "Ebtisamalaama@gmail.com";
 
     @Override
-    public void send(String subject, String htmlContent) {
+    public void send(String subject, String htmlContent)
+            throws ContentSizeExceededException
+    {
+        if (emailProperties.getFrom() == null) {
+            throw new IllegalStateException("sender email address is not configured");
+        }
+
+        if (htmlContent.getBytes().length > Size_Limit) {
+            throw new ContentSizeExceededException();
+        }
+
         try {
-            if (emailProperties.getFrom() == null) {
-                throw new IllegalStateException("From email address is not configured");
-            }
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             
@@ -36,14 +47,13 @@ public class EmailServiceImpl implements SenderService {
 
             mailSender.send(message);
             log.info("Email sent successfully");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Failed to send email: ", e);
             throw new RuntimeException("Failed to send email", e);
         }
     }
 
-
-    
 
     
 }

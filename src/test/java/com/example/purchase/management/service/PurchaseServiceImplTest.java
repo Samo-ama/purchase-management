@@ -190,6 +190,29 @@ public class PurchaseServiceImplTest {
         verify(purchaseRepository, times(1)).findAll();
     }
 
+    @Test
+    void getAllPurchases_WhenLargeNumberOfPurchases_ShouldReturnListOfPurchases() {
+        // Arrange
+        int numberOfPurchases = 1000000;
+        List<Purchase> purchases = new ArrayList<>();
+
+        for (int i = 0; i < numberOfPurchases; i++) {
+            purchases.add(new Purchase());
+        }
+
+        // Mock
+        when(purchaseRepository.findAll()).thenReturn(purchases);
+
+        // Act
+        List<Purchase> result = purchaseService.getAllPurchases();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(numberOfPurchases, result.size());
+        verify(purchaseRepository, times(1)).findAll();
+    }
+
+
     /**
      * Test retrieving yesterday's purchases
      * Expected: Should return list of yesterday's purchases

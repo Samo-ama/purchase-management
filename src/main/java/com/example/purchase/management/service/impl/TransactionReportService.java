@@ -1,40 +1,28 @@
 package com.example.purchase.management.service.impl;
 
-import com.example.purchase.management.repository.PurchaseRepository;
-import com.example.purchase.management.repository.RefundRepository;
-import com.example.purchase.management.service.SenderService;
+import com.example.purchase.management.report.ReportGenerator;
 import com.example.purchase.management.service.PurchaseService;
 import com.example.purchase.management.service.RefundService;
 import com.example.purchase.management.service.ReportService;
-import com.example.purchase.management.report.ReportGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-//import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class YesterdayTransactionReportService implements ReportService {
+public class TransactionReportService implements ReportService {
 
-   
-    private final SenderService emailService;
     private final ReportGenerator reportGenerator;
     private final PurchaseService purchaseService;
     private final RefundService refundService;
-    LocalDateTime start;
-    LocalDateTime end ;
 
     @Override
-    public String generateReport() {
+    public String generateReport(LocalDateTime start, LocalDateTime end) {
         try {
-
-             start = LocalDate.now().minusDays(1).atStartOfDay();
-             end = LocalDate.now().atStartOfDay();
 
             // Get yesterday's transactions
             var purchases = purchaseService.getPurchasesBetween(start, end);
@@ -48,11 +36,6 @@ public class YesterdayTransactionReportService implements ReportService {
             log.error("Failed to generate and send report: ", e);
             throw new RuntimeException("Failed to generate and send report", e);
         }
-
-
-
-           
-
     }
 
    /*  @Override

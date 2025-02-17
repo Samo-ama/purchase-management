@@ -1,7 +1,10 @@
 package com.example.purchase.management.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public interface ReportService {
-    String generateReport();
+    String generateReport(LocalDateTime start, LocalDateTime end);
 
     //void generateAndSendReport();
 }
