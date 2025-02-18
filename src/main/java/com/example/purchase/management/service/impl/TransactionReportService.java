@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -24,7 +23,6 @@ public class TransactionReportService implements ReportService {
     public String generateReport(LocalDateTime start, LocalDateTime end) {
         try {
 
-            // Get yesterday's transactions
             var purchases = purchaseService.getPurchasesBetween(start, end);
             var refunds = refundService.getRefundBetween(start,end);
 
@@ -38,26 +36,6 @@ public class TransactionReportService implements ReportService {
         }
     }
 
-   /*  @Override
-    public void generateAndSendReport() {
-        try {
-
-            // Get yesterday's transactions
-            var purchases = purchaseService.getYesterdayPurchases();
-            var refunds = refundService.getYesterdayRefunds();
-
-            String htmlReport = reportGenerator.generateReport(purchases, refunds);
-
-            emailService.send(
-                    "Daily Transactions Report - " + LocalDate.now().minusDays(1),
-                    htmlReport);
-            log.info("Report generated and sent successfully");
-
-        } catch (Exception e) {
-            log.error("Failed to generate and send report: ", e);
-            throw new RuntimeException("Failed to generate and send report", e);
-        }
-    } */
 
     
 }

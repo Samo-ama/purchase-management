@@ -21,8 +21,7 @@ public class EmailServiceImpl implements SenderService {
 
      private static final int Size_Limit = 25 * 1024 * 1024;
 
-    //private static final String FROM_EMAIL = "test.test13390@outlook.com";
-    //private static final String TO_EMAIL = "Ebtisamalaama@gmail.com";
+   
 
     @Override
     public void send(String subject, String htmlContent)

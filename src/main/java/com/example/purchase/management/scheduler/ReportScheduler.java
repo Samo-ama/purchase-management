@@ -39,14 +39,5 @@ public class ReportScheduler {
         }
     }
 
-   /*  @Scheduled(cron = "0 0 1 * * *")  // Runs at 1 AM every day
-    public void sendDailyReport() {
-        log.info("Starting daily report generation...");
-        try {
-            reportService.generateReport();
-            log.info("Daily report sent successfully");
-        } catch (Exception e) {
-            log.error("Failed to send daily report: ", e);
-        }
-    } */
+  
 }

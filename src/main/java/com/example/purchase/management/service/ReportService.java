@@ -6,5 +6,4 @@ import java.time.LocalDateTime;
 public interface ReportService {
     String generateReport(LocalDateTime start, LocalDateTime end);
 
-    //void generateAndSendReport();
 }
