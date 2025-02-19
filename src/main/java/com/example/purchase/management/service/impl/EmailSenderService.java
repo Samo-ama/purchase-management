@@ -14,10 +14,10 @@ import jakarta.mail.internet.MimeMessage;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class EmailServiceImpl implements SenderService {
+public class EmailSenderService implements SenderService {
 
     private final JavaMailSender mailSender;
-     private final EmailProperties emailProperties;
+    private final EmailProperties emailProperties;
 
      private static final int Size_Limit = 25 * 1024 * 1024;
 

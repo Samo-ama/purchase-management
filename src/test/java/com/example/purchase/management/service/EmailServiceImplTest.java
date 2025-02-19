@@ -2,7 +2,7 @@ package com.example.purchase.management.service;
 
 import com.example.purchase.management.config.EmailProperties;
 import com.example.purchase.management.exception.ContentSizeExceededException;
-import com.example.purchase.management.service.impl.EmailServiceImpl;
+import com.example.purchase.management.service.impl.EmailSenderService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 class EmailServiceImplTest {
 
     @InjectMocks
-    private EmailServiceImpl emailService;
+    private EmailSenderService emailService;
 
     @Mock
     private JavaMailSender mailSender;

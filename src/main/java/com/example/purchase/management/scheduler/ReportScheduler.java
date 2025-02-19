@@ -2,6 +2,7 @@ package com.example.purchase.management.scheduler;
 
 import com.example.purchase.management.service.ReportService;
 import com.example.purchase.management.service.SenderService;
+import com.example.purchase.management.service.DateRangeProvider;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +17,14 @@ import java.time.LocalDateTime;
 public class ReportScheduler {
 
     private final ReportService reportService;
-    private final SenderService emailService;
+    private final SenderService emailSender;
+    private final DateRangeProvider dateProvider;
     
     
-   //Yesterday Date
+   /* //Yesterday Date
     private LocalDate Date = LocalDate.now().minusDays(1);
     private LocalDateTime start = Date.atStartOfDay();
-    private LocalDateTime end = LocalDate.now().atStartOfDay();
+    private LocalDateTime end = LocalDate.now().atStartOfDay(); */
 
  
     @Scheduled(cron = "0 0 1 * * *")  // Runs at 1 AM every day
@@ -30,12 +32,13 @@ public class ReportScheduler {
         log.info("Starting daily report generation...");
         try {
            
-            // Generate report for yesterday's purchases and refunds
-           //Parameters: start (yesterday's start) and end (today's start)
-           String TransactionReport = reportService.generateReport(start, end);
+            
+          // Generate report for yesterday's purchases and refunds
+           var dateRange = dateProvider.getYesterdayRange();
+           String TransactionReport = reportService.generateReport(dateRange.getStart(), dateRange.getEnd());
 
-            emailService.send(
-            "Daily Transactions Report - " + Date,
+           emailSender.send(
+            "Daily Transactions Report - " + dateRange.getStart(),
             TransactionReport);
             log.info("Daily report sent successfully");
         } catch (Exception e) {
