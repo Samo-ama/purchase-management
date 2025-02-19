@@ -17,22 +17,26 @@ public class ReportScheduler {
 
     private final ReportService reportService;
     private final SenderService emailService;
-
-    private LocalDate yesterdayDate = LocalDate.now().minusDays(1);
-    private LocalDateTime start = yesterdayDate.atStartOfDay();
+    
+    
+   //Yesterday Date
+    private LocalDate Date = LocalDate.now().minusDays(1);
+    private LocalDateTime start = Date.atStartOfDay();
     private LocalDateTime end = LocalDate.now().atStartOfDay();
 
-    //Scheduled(cron = "0 * * * * *") // Runs every minute, For testing
+ 
     @Scheduled(cron = "0 0 1 * * *")  // Runs at 1 AM every day
     public void sendScheduledReport() {
         log.info("Starting daily report generation...");
         try {
-
-           String YesterdayTransactionReport = reportService.generateReport(start, end);
+           
+            // Generate report for yesterday's purchases and refunds
+           //Parameters: start (yesterday's start) and end (today's start)
+           String TransactionReport = reportService.generateReport(start, end);
 
             emailService.send(
-            "Daily Transactions Report - " + yesterdayDate,
-            YesterdayTransactionReport);
+            "Daily Transactions Report - " + Date,
+            TransactionReport);
             log.info("Daily report sent successfully");
         } catch (Exception e) {
             log.error("Failed to send daily report: ", e);
