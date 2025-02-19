@@ -19,32 +19,23 @@ public class ReportScheduler {
     private final ReportService reportService;
     private final SenderService emailSender;
     private final DateRangeProvider dateProvider;
-    
-    
-   /* //Yesterday Date
-    private LocalDate Date = LocalDate.now().minusDays(1);
-    private LocalDateTime start = Date.atStartOfDay();
-    private LocalDateTime end = LocalDate.now().atStartOfDay(); */
 
- 
-    @Scheduled(cron = "0 0 1 * * *")  // Runs at 1 AM every day
+    @Scheduled(cron = "0 0 1 * * *") // Runs at 1 AM every day
     public void sendScheduledReport() {
         log.info("Starting daily report generation...");
         try {
-           
-            
-          // Generate report for yesterday's purchases and refunds
-           var dateRange = dateProvider.getYesterdayRange();
-           String TransactionReport = reportService.generateReport(dateRange.getStart(), dateRange.getEnd());
 
-           emailSender.send(
-            "Daily Transactions Report - " + dateRange.getStart(),
-            TransactionReport);
+            // Generate report for yesterday's purchases and refunds
+            var dateRange = dateProvider.getYesterdayRange();
+            String TransactionReport = reportService.generateReport(dateRange.getStart(), dateRange.getEnd());
+
+            emailSender.send(
+                    "Daily Transactions Report - " + dateRange.getStart(),
+                    TransactionReport);
             log.info("Daily report sent successfully");
         } catch (Exception e) {
             log.error("Failed to send daily report: ", e);
         }
     }
 
-  
 }
